@@ -3,6 +3,7 @@ extends StaticBody2D
 
 signal destroyed
 
+
 func _ready():
 	pass
 

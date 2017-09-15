@@ -15,8 +15,6 @@ margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 32.0
 script/script = ExtResource( 1 )
-score = 0
-lives = 3
 
 [node name="ScoreContainer" type="HBoxContainer" parent="."]
 
