@@ -15,7 +15,7 @@ script/script = ExtResource( 1 )
 
 [node name="Paddle" parent="." instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 512, 736 )
+transform/pos = Vector2( 640, 680 )
 
 [node name="BlockContainer" type="Node" parent="."]
 
