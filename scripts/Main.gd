@@ -57,12 +57,12 @@ func create_blocks():
 		# adjust the value/brightness based on row height
 		row_color.v = .3 + (.15 * row)
 		# calculate the row's y position
-		var y = 320 - (32 * row)
+		var y = 400 - (40 * row)
 		
 		# loop through 15 columns in the row
 		for column in range(1, 16):
 			# calculate the column x position
-			var x = 64 * column
+			var x = 80 * column
 			# create the row/column position
 			var position = Vector2(x, y)
 			# create a new node from the block scene

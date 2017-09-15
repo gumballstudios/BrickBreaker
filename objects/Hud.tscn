@@ -22,11 +22,11 @@ focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 0
 size_flags/vertical = 0
-margin/left = 16.0
-margin/top = 5.0
-margin/right = 128.0
-margin/bottom = 26.0
-custom_constants/separation = 16
+margin/left = 20.0
+margin/top = 9.0
+margin/right = 126.0
+margin/bottom = 30.0
+custom_constants/separation = 10
 alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="ScoreContainer"]
@@ -51,9 +51,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 97.0
+margin/left = 91.0
 margin/top = 0.0
-margin/right = 112.0
+margin/right = 106.0
 margin/bottom = 21.0
 custom_fonts/font = ExtResource( 2 )
 text = "0"
@@ -69,11 +69,11 @@ focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 0
 size_flags/vertical = 0
-margin/left = 16.0
-margin/top = 8.0
-margin/right = 16.0
-margin/bottom = 8.0
-custom_constants/separation = 8
+margin/left = 20.0
+margin/top = 10.0
+margin/right = 20.0
+margin/bottom = 2.0
+custom_constants/separation = 10
 alignment = 2
 
 

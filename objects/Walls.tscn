@@ -5,17 +5,17 @@
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
 custom_solver_bias = 0.0
-points = Vector2Array( 1024, 32, 1024, 768, 992, 768, 992, 64 )
+points = Vector2Array( 1280, 40, 1280, 720, 1240, 720, 1240, 80 )
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 
 custom_solver_bias = 0.0
-points = Vector2Array( 0, 32, 1024, 32, 992, 64, 32, 64 )
+points = Vector2Array( 0, 40, 1280, 40, 1240, 80, 40, 80 )
 
 [sub_resource type="ConvexPolygonShape2D" id=3]
 
 custom_solver_bias = 0.0
-points = Vector2Array( 0, 768, 0, 32, 32, 64, 32, 768 )
+points = Vector2Array( 0, 720, 0, 40, 40, 80, 40, 720 )
 
 [node name="Walls" type="StaticBody2D"]
 
@@ -41,21 +41,21 @@ __meta__ = {
 
 [node name="Left" type="Sprite" parent="."]
 
-transform/pos = Vector2( 0, 32 )
-transform/scale = Vector2( 1, 23 )
+transform/pos = Vector2( 0, 40 )
+transform/scale = Vector2( 1, 17 )
 texture = ExtResource( 1 )
 centered = false
 
 [node name="Right" type="Sprite" parent="."]
 
-transform/pos = Vector2( 992, 32 )
-transform/scale = Vector2( 1, 23 )
+transform/pos = Vector2( 1240, 40 )
+transform/scale = Vector2( 1, 17 )
 texture = ExtResource( 1 )
 centered = false
 
 [node name="Top" type="Sprite" parent="."]
 
-transform/pos = Vector2( 0, 32 )
+transform/pos = Vector2( 0, 40 )
 transform/scale = Vector2( 32, 1 )
 texture = ExtResource( 1 )
 centered = false
@@ -63,7 +63,7 @@ centered = false
 [node name="Collision" type="CollisionPolygon2D" parent="."]
 
 build_mode = 0
-polygon = Vector2Array( 0, 32, 1024, 32, 1024, 768, 992, 768, 992, 64, 32, 64, 32, 768, 0, 768 )
+polygon = Vector2Array( 0, 40, 1280, 40, 1280, 720, 1240, 720, 1240, 80, 40, 80, 40, 720, 0, 720 )
 shape_range = Vector2( 0, 2 )
 trigger = false
 
