@@ -13,6 +13,11 @@ func _ready():
 	# turn on fixed step processing
 	set_fixed_process(true)
 	
+	# initialize the score
+	hud.score = 0
+	# initialize the number of lives
+	hud.lives = 3
+	
 	# setup a new ball node
 	create_ball()
 	# setup the block nodes
