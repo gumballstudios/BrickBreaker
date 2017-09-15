@@ -8,6 +8,8 @@ var velocity = Vector2()
 var held = true
 var hold_position
 
+onready var sound_effects = get_node("SoundEffects")
+
 
 func _ready():
 	# turn on fixed step processing
@@ -53,6 +55,8 @@ func _fixed_process(delta):
 		if body.is_in_group("Blocks"): # hit a block
 			# Let the block know it was hit
 			body.hit() 
+			# play the block hit sound
+			sound_effects.play("BlockHit")
 		elif body.get_name() == "Paddle": # hit the paddle
 			var distance = Vector2()
 			# calculate the distance of the ball from center of paddle
@@ -63,6 +67,11 @@ func _fixed_process(delta):
 			velocity += influence
 			# reset the ball speed
 			velocity = velocity.normalized() * BALL_SPEED
+			# play the paddle hit sound
+			sound_effects.play("PaddleHit")
+		else:
+			# play the wall hit sound
+			sound_effects.play("WallHit")
 
 
 func _input(event):
