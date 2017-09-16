@@ -9,6 +9,7 @@ var held = true
 var hold_position
 
 onready var sound_effects = get_node("SoundEffects")
+onready var trail = get_node("Trail")
 
 
 func _ready():
@@ -32,6 +33,8 @@ func _ready():
 
 func _fixed_process(delta):
 	if held: # ball stays at a fixed position
+		# turn off the particle trail while the ball is held
+		trail.set_emitting(false)
 		if hold_position: # if hold position exists
 			# move the ball to the hold position's location
 			set_pos(hold_position.get_global_pos())
@@ -78,6 +81,8 @@ func _input(event):
 	if held and event.is_action_pressed("ball_release"): # space was pressed while the ball is being held
 		# removed the held flag to let the ball start moving
 		held = false
+		# turn on particle trail
+		trail.set_emitting(true)
 
 
 func _on_visible_exit_screen():
