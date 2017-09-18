@@ -11,16 +11,16 @@
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
 
-[sub_resource type="ColorRamp" id=3]
+[sub_resource type="ColorRamp" id=2]
 
 offsets = FloatArray( 0, 1 )
 colors = ColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
 
-[sub_resource type="SampleLibrary" id=2]
+[sub_resource type="SampleLibrary" id=3]
 
 samples/BlockHit = {
 "db": 0.0,
-"pitch": 1.5,
+"pitch": 1.0,
 "priority": 0,
 "sample": ExtResource( 3 )
 }
@@ -76,7 +76,7 @@ params/final_size = 0.1
 params/hue_variation = 0.0
 params/anim_speed_scale = 1.0
 params/anim_initial_pos = 0.0
-color/color_ramp = SubResource( 3 )
+color/color_ramp = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 
@@ -95,7 +95,7 @@ rect = Rect2( -8, -8, 16, 16 )
 [node name="SoundEffects" type="SamplePlayer" parent="."]
 
 config/polyphony = 1
-config/samples = SubResource( 2 )
+config/samples = SubResource( 3 )
 default/volume_db = 0.0
 default/pitch_scale = 1.0
 default/pan = 0.0
