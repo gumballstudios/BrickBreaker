@@ -46,21 +46,27 @@ func _fixed_process(delta):
 	# calculation the movement for the current tick 
 	# using velocity (units per seconds) and delta (seconds)
 	var motion = velocity * delta
-	# move the ball
-	move(motion)
+	# move the ball and get any remaining motion after the collision
+	var remaining_motion = move(motion)
 	
 	if is_colliding(): # something was hit
 		# determine normal of the body struck
 		var normal = get_collision_normal()
 		# reflect the velocity using that normal
 		velocity = normal.reflect(velocity)
+		# reflect the remaining motion using that normal
+		remaining_motion = normal.reflect(remaining_motion)
 		
 		# create a new node from the ball collision scene
 		var collision = collision_scene.instance()
 		# set the effect's position
 		collision.set_pos(determine_effect_position())
-		# add the node to the parent container
-		get_parent().add_child(collision)
+		# get the root
+		var root = get_node("/root")
+		# get the main scene (last child of the root)
+		var main_scene = root.get_child(root.get_child_count() - 1)
+		# add the node to the main scene
+		main_scene.add_child(collision)
 		
 		# check what was hit
 		var body = get_collider()
@@ -84,6 +90,9 @@ func _fixed_process(delta):
 		else:
 			# play the wall hit sound
 			sound_effects.play("WallHit")
+		
+		# move the remaining motion
+		move(remaining_motion)
 
 
 func _input(event):
