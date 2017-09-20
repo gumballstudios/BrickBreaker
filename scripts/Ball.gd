@@ -11,6 +11,8 @@ var hold_position
 onready var sound_effects = get_node("SoundEffects")
 onready var trail = get_node("Trail")
 
+var collision_scene = preload("res://objects/BallCollision.tscn")
+
 
 func _ready():
 	# turn on fixed step processing
@@ -53,6 +55,13 @@ func _fixed_process(delta):
 		# reflect the velocity using that normal
 		velocity = normal.reflect(velocity)
 		
+		# create a new node from the ball collision scene
+		var collision = collision_scene.instance()
+		# set the effect's position
+		collision.set_pos(determine_effect_position())
+		# add the node to the parent container
+		get_parent().add_child(collision)
+		
 		# check what was hit
 		var body = get_collider()
 		if body.is_in_group("Blocks"): # hit a block
@@ -88,4 +97,27 @@ func _input(event):
 func _on_visible_exit_screen():
 	# free the ball resources
 	queue_free()
+
+
+func determine_effect_position():
+	# get the sprite node
+	var sprite = get_node("Sprite")
+	# get the diameter (half width) of the sprite
+	var sprite_diameter = sprite.get_texture().get_width() / 2
+	
+	# get the difference between the collision position and the ball's position
+	var distance = get_collision_pos() - get_pos();
+	# determine the offset based on the collision position being a corner of the collision shape
+	#     x,  y = collision on bottom of ball
+	#    -x, -y = collision on top of ball
+	#    -x,  y = collision on left of ball
+	#     x, -y = collision on right of ball
+	# create the x offset from the ball's position
+	var offset_x = 0 if sign(distance.x) == sign(distance.y) else sign(distance.x)
+	# create the y offset from the ball's position
+	var offset_y = sign(distance.y) if sign(distance.x) == sign(distance.y) else 0
+	
+	# return the ball's position plus the offset
+	return get_pos() + (Vector2(offset_x, offset_y) * sprite_diameter)
+
 
