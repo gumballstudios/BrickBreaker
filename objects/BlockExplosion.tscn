@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://sprites/tile.png" type="Texture" id=1]
+[ext_resource path="res://scripts/BlockExplosion.gd" type="Script" id=2]
+
+[node name="Explosion" type="Particles2D"]
+
+config/amount = 16
+config/lifetime = 0.6
+config/emit_timeout = 0.6
+config/emitting = false
+config/process_mode = 1
+config/half_extents = Vector2( 40, 10 )
+config/explosiveness = 0.01
+config/texture = ExtResource( 1 )
+params/direction = 180.0
+params/spread = 90.0
+params/linear_velocity = 50.0
+params/spin_velocity = 0.0
+params/orbit_velocity = 0.0
+params/gravity_direction = 0.0
+params/gravity_strength = 300.0
+params/radial_accel = 0.0
+params/tangential_accel = 0.0
+params/damping = 0.0
+params/initial_angle = 0.0
+params/initial_size = 1.0
+params/final_size = 1.0
+params/hue_variation = 0.0
+params/anim_speed_scale = 1.0
+params/anim_initial_pos = 0.0
+script/script = ExtResource( 2 )
+
+[node name="Fader" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[connection signal="tween_complete" from="Fader" to="." method="_on_fader_tween_complete"]
+
+
