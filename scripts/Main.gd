@@ -37,44 +37,16 @@ func _fixed_process(delta):
 
 
 func create_blocks():
-	# get a random base color for the blocks
-	var base_color = random_color()
-	
-	# invert the base color to use as the wall color
-	var wall_color = base_color.inverted()
-	# apply the wall color to the wall sprite on the left
-	get_node("Walls/Left").set_modulate(wall_color)
-	# right
-	get_node("Walls/Right").set_modulate(wall_color)
-	# and top
-	get_node("Walls/Top").set_modulate(wall_color)
-	
-	# create the rows and columns of blocks, left to right and bottom to top
-	# loop through 5 rows
-	for row in range(1, 6):
-		# copy the base color
-		var row_color = base_color
-		# adjust the value/brightness based on row height
-		row_color.v = .3 + (.15 * row)
-		# calculate the row's y position
-		var y = 400 - (40 * row)
-		
-		# loop through 15 columns in the row
-		for column in range(1, 16):
-			# calculate the column x position
-			var x = 80 * column
-			# create the row/column position
-			var position = Vector2(x, y)
-			# create a new node from the block scene
-			var block = block_scene.instance()
-			# set the block's position to it's row/column
-			block.set_pos(position)
-			# adjust the block's sprite color to the row's color
-			block.get_node("Sprite").set_modulate(row_color)
-			# connect the signal to the handler method
-			block.connect("destroyed", self, "_on_block_destroyed")
-			# add the block node to the container
-			block_container.add_child(block)
+	# get the block factory
+	var factory = get_node("BlockFactory")
+	# have the factory generate a set of blocks for the level
+	var block_list = factory.generate_blocks()
+	# loop through each block in the list
+	for block in block_list:
+		# connect the block's destroyed signal to the handler method
+		block.connect("destroyed", self, "_on_block_destroyed")
+		# add the block node to the container
+		block_container.add_child(block)
 
 
 func _on_block_destroyed():

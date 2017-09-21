@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://objects/Walls.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/Paddle.tscn" type="PackedScene" id=3]
 [ext_resource path="res://objects/Hud.tscn" type="PackedScene" id=4]
+[ext_resource path="res://objects/BlockFactory.tscn" type="PackedScene" id=5]
 
 [node name="Main" type="Node"]
 
@@ -22,5 +23,7 @@ script/script = ExtResource( 1 )
 transform/pos = Vector2( 640, 680 )
 
 [node name="Hud" parent="." instance=ExtResource( 4 )]
+
+[node name="BlockFactory" parent="." instance=ExtResource( 5 )]
 
 

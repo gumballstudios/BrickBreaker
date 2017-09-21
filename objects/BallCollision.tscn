@@ -10,6 +10,7 @@ colors = ColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
 [node name="BallCollision" type="Particles2D"]
 
 visibility/self_opacity = 0.25
+z/z = -1
 config/amount = 90
 config/lifetime = 0.2
 config/emit_timeout = 0.2
