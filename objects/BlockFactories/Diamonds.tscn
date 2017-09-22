@@ -4,6 +4,7 @@
 
 [node name="Diamonds" type="Node"]
 
+editor/display_folded = true
 script/script = ExtResource( 1 )
 
 [node name="Diamond1" type="Node" parent="."]

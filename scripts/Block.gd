@@ -1,9 +1,11 @@
 extends StaticBody2D
 
 
-signal destroyed
+signal destroyed(block)
 
 var explosion_scene = preload("res://objects/BlockExplosion.tscn")
+
+var score_value = 5
 
 
 func _ready():
@@ -12,7 +14,7 @@ func _ready():
 
 func hit():
 	# let everyone know we've been destroyed
-	emit_signal("destroyed")
+	emit_signal("destroyed", self)
 	
 	# get the sprite node
 	var sprite = get_node("Sprite")

@@ -26,6 +26,8 @@ var quad_positions = [
 		Vector2(0, 2)
 	]
 ]
+var row_count = quad_positions.size()
+var base_score_value = 10
 
 
 func _ready():
@@ -52,7 +54,7 @@ func generate_blocks():
 				# copy the base color
 				var row_color = base_color
 				# adjust the value/brightness based on row index
-				row_color.v = .4 + (.3 * row_index)
+				row_color.v = 1 - (.3 * row_index)
 				# loop through the positions in a row
 				for position_offset in row:
 					# calculate the actual position from the starting position using 
@@ -65,6 +67,8 @@ func generate_blocks():
 					block.set_pos(position)
 					# adjust the block's sprite color to the row's color
 					block.get_node("Sprite").set_modulate(row_color)
+					# set the block's score value
+					block.score_value = base_score_value * (row_count - row_index)
 					# add the block node to the list
 					block_list.append(block)
 				# end for position_offset

@@ -3,6 +3,11 @@ extends Node
 
 var block_scene = preload("res://objects/Block.tscn")
 
+var row_count = 5
+var column_count = 15
+var block_size = Vector2(80, 40)
+var base_score_value = 5
+
 
 func _ready():
 	# randomize the randon generator seed
@@ -21,26 +26,24 @@ func generate_blocks():
 	
 	# create the rows and columns of blocks, left to right and top to bottom from origin
 	# loop through 5 rows
-	for row in range(0, 5):
+	for row in range(0, row_count):
 		# copy the base color
 		var row_color = base_color
 		# adjust the value/brightness based on row height
 		row_color.v = 1 - (.15 * row)
-		# calculate the row's y position
-		var y = origin.y + (40 * row)
 		
 		# loop through 15 columns in the row
-		for column in range(0, 15):
-			# calculate the column x position
-			var x = origin.x + (80 * column)
+		for column in range(0, column_count):
 			# create the row/column position
-			var position = Vector2(x, y)
+			var position = origin + (block_size * Vector2(column, row))
 			# create a new node from the block scene
 			var block = block_scene.instance()
 			# set the block's position to it's row/column
 			block.set_pos(position)
 			# adjust the block's sprite color to the row's color
 			block.get_node("Sprite").set_modulate(row_color)
+			# set the block's score value
+			block.score_value = base_score_value * (row_count - row)
 			# add the block node to the list
 			block_list.append(block)
 	

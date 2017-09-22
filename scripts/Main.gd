@@ -49,8 +49,8 @@ func create_blocks():
 		block_container.add_child(block)
 
 
-func _on_block_destroyed():
-	hud.score += 10
+func _on_block_destroyed(block):
+	hud.score += block.score_value
 
 
 func create_ball():

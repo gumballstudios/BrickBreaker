@@ -54,7 +54,7 @@ __meta__ = {
 [node name="Trail" type="Particles2D" parent="."]
 
 visibility/self_opacity = 0.1
-config/amount = 128
+config/amount = 15
 config/lifetime = 0.5
 config/emitting = false
 config/process_mode = 1
