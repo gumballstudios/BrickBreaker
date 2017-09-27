@@ -28,6 +28,7 @@ var quad_positions = [
 ]
 var row_count = quad_positions.size()
 var base_score_value = 10
+var base_speed_level = 4
 
 
 func _ready():
@@ -69,6 +70,8 @@ func generate_blocks():
 					block.get_node("Sprite").set_modulate(row_color)
 					# set the block's score value
 					block.score_value = base_score_value * (row_count - row_index)
+					# set the block's speed_level
+					block.speed_level = base_speed_level - (2 * row_index)
 					# add the block node to the list
 					block_list.append(block)
 				# end for position_offset

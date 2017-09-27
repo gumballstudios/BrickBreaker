@@ -3,10 +3,16 @@ extends KinematicBody2D
 
 const BALL_SPEED = 300
 const PADDLE_INFLUENCE = 5
+const MAX_SPEED_LEVEL = 5
+
 
 var velocity = Vector2()
+var speed_level = 0
+var speed_increase_percentage = 0.05
+
 var held = true
 var hold_position
+
 
 onready var sound_effects = get_node("SoundEffects")
 onready var trail = get_node("Trail")
@@ -19,18 +25,6 @@ func _ready():
 	set_fixed_process(true)
 	# turn on input handling
 	set_process_input(true)
-	
-	# randomize the randon generator seed
-	randomize()
-	
-	# set the initial velocity going straight upwards
-	var initial_velocity = Vector2(0, -BALL_SPEED)
-	# generate a random angle between -30 degrees and 30 degrees
-	var angle = rand_range(-30, 30)
-	# convert the angle to radians
-	var radian = deg2rad(angle)
-	# rotate the initial velocity by the random angle
-	velocity = initial_velocity.rotated(radian)
 
 
 func _fixed_process(delta):
@@ -46,7 +40,7 @@ func _fixed_process(delta):
 	# calculation the movement for the current tick 
 	# using velocity (units per seconds) and delta (seconds)
 	var motion = velocity * delta
-	# move the ball and get any remaining motion after the collision
+	# move the ball and get any remaining motion after a collision
 	var remaining_motion = move(motion)
 	
 	if is_colliding(): # something was hit
@@ -71,10 +65,13 @@ func _fixed_process(delta):
 		# check what was hit
 		var body = get_collider()
 		if body.is_in_group("Blocks"): # hit a block
-			# Let the block know it was hit
-			body.hit() 
-			# play the block hit sound
-			sound_effects.play("BlockHit")
+			# Let the block know it was hit and see if it was destroyed
+			var block_destroyed = body.hit() 
+			if block_destroyed:
+				# update the speed level based on the block's speed level
+				set_speed_level(body.speed_level)
+				# play the block hit sound
+				sound_effects.play("BlockHit")
 		elif body.get_name() == "Paddle": # hit the paddle
 			var distance = Vector2()
 			# calculate the distance of the ball from center of paddle
@@ -84,10 +81,12 @@ func _fixed_process(delta):
 			# apply the horizontal influence on the current velocity
 			velocity += influence
 			# reset the ball speed
-			velocity = velocity.normalized() * BALL_SPEED
+			velocity = velocity.normalized() * get_current_speed()
 			# play the paddle hit sound
 			sound_effects.play("PaddleHit")
 		else:
+			if body.get_name() == "Top":
+				set_speed_level(MAX_SPEED_LEVEL)
 			# play the wall hit sound
 			sound_effects.play("WallHit")
 		
@@ -106,6 +105,28 @@ func _input(event):
 func _on_visible_exit_screen():
 	# free the ball resources
 	queue_free()
+
+
+func initialize(new_hold_position):
+	# randomize the randon generator seed
+	randomize()
+	
+	# set the ball to being held in one place
+	held = true
+	# set the position the bass should be held
+	hold_position = new_hold_position
+	# set the ball's position to the hold position
+	set_pos(hold_position.get_pos())
+	# set the speed level to the lowest value
+	speed_level = 0
+	# set the initial velocity going straight upwards
+	var initial_velocity = Vector2(0, -1) * get_current_speed()
+	# generate a random angle between -30 degrees and 30 degrees
+	var angle = rand_range(-30, 30)
+	# convert the angle to radians
+	var radian = deg2rad(angle)
+	# rotate the initial velocity by the random angle
+	velocity = initial_velocity.rotated(radian)
 
 
 func determine_effect_position():
@@ -130,3 +151,15 @@ func determine_effect_position():
 	return get_pos() + (Vector2(offset_x, offset_y) * sprite_diameter)
 
 
+func set_speed_level(new_level):
+	# Set speed level to the highest value between old and new values
+	speed_level = max(speed_level, new_level)
+	# reset the velocity based on the new speed level
+	velocity = velocity.normalized() * get_current_speed()
+
+
+func get_current_speed():
+	# calculated the speed increase based on speed level
+	var increase = BALL_SPEED * (speed_increase_percentage * speed_level)
+	# return the increased speed
+	return BALL_SPEED + increase

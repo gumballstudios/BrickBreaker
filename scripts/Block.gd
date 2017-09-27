@@ -6,7 +6,7 @@ signal destroyed(block)
 var explosion_scene = preload("res://objects/BlockExplosion.tscn")
 
 var score_value = 5
-
+var speed_level = 0
 
 func _ready():
 	pass
@@ -32,4 +32,7 @@ func hit():
 	
 	# free the node's resources
 	queue_free()
+	
+	# return that the block was destroyed
+	return true
 

@@ -58,11 +58,8 @@ func create_ball():
 	var ball = ball_scene.instance()
 	# get the paddle's Position2D node
 	var hold_position = get_node("Paddle/BallHolder")
-	# set the ball's hold position to the Position2D node
-	ball.hold_position = hold_position
-	# set the ball's position to the Position2D node's position
-	# this will start the ball in the scene already in the correct location
-	ball.set_pos(hold_position.get_pos())
+	# initialize the ball
+	ball.initialize(hold_position)
 	# add the ball to the container
 	ball_container.add_child(ball)
 
@@ -89,28 +86,8 @@ func reset_balls():
 	
 	# get the single remaining ball node from the container
 	var ball = ball_container.get_child(0)
-	# enable the held flag
-	ball.held = true
 	# get the paddle's Position2D node
 	var hold_position = get_node("Paddle/BallHolder")
-	# set the ball's hold position to the Position2D node
-	ball.hold_position = hold_position
-	# set the ball's position to the Position2D node's position
-	# this will move the ball to the correct location
-	ball.set_pos(hold_position.get_pos())
-
-
-func random_color():
-	# randomize the randon generator seed
-	randomize()
-	
-	# get a random value for red
-	var r = rand_range(0, 1)
-	# green
-	var g = rand_range(0, 1)
-	# and blue
-	var b = rand_range(0, 1)
-	
-	# return the color using the random rgb values
-	return Color(r, g, b)
+	# reinitialize the ball
+	ball.initialize(hold_position)
 

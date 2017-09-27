@@ -7,6 +7,7 @@ var row_count = 5
 var column_count = 15
 var block_size = Vector2(80, 40)
 var base_score_value = 5
+var base_speed_level = 4
 
 
 func _ready():
@@ -44,6 +45,8 @@ func generate_blocks():
 			block.get_node("Sprite").set_modulate(row_color)
 			# set the block's score value
 			block.score_value = base_score_value * (row_count - row)
+			# set the block's speed_level
+			block.speed_level = base_speed_level - row
 			# add the block node to the list
 			block_list.append(block)
 	
