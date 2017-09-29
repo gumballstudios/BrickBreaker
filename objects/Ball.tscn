@@ -88,10 +88,6 @@ shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
-[node name="Visible" type="VisibilityNotifier2D" parent="."]
-
-rect = Rect2( -8, -8, 16, 16 )
-
 [node name="SoundEffects" type="SamplePlayer" parent="."]
 
 config/polyphony = 1
@@ -108,7 +104,5 @@ default/filter/gain = 1.0
 default/reverb_room = 2
 default/reverb_send = 0.0
 default/chorus_send = 0.0
-
-[connection signal="exit_screen" from="Visible" to="." method="_on_visible_exit_screen"]
 
 

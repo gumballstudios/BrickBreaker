@@ -1,10 +1,11 @@
 extends KinematicBody2D
 
 
+signal destroyed
+
 const BALL_SPEED = 300
 const PADDLE_INFLUENCE = 5
 const MAX_SPEED_LEVEL = 5
-
 
 var velocity = Vector2()
 var speed_level = 0
@@ -13,6 +14,7 @@ var speed_increase_percentage = 0.05
 var held = true
 var hold_position
 
+var out_of_bounds_y
 
 onready var sound_effects = get_node("SoundEffects")
 onready var trail = get_node("Trail")
@@ -25,6 +27,13 @@ func _ready():
 	set_fixed_process(true)
 	# turn on input handling
 	set_process_input(true)
+	
+	# get the height of the view port.
+	var view_height = get_viewport_rect().size.y
+	# get the height of the sprite
+	var sprite_offset = get_node("Sprite").get_texture().get_size().y / 2
+	# calculate the out of bounds height
+	out_of_bounds_y = view_height + sprite_offset
 
 
 func _fixed_process(delta):
@@ -34,6 +43,14 @@ func _fixed_process(delta):
 		if hold_position: # if hold position exists
 			# move the ball to the hold position's location
 			set_pos(hold_position.get_global_pos())
+		# leave the function to prevent the ball from moving
+		return
+	
+	if get_pos().y >= out_of_bounds_y: # ball has left the bottom of the screen
+		# let everyone know we've been destroyed
+		emit_signal("destroyed")
+		# free the ball resources
+		queue_free()
 		# leave the function to prevent the ball from moving
 		return
 	
@@ -51,44 +68,20 @@ func _fixed_process(delta):
 		# reflect the remaining motion using that normal
 		remaining_motion = normal.reflect(remaining_motion)
 		
-		# create a new node from the ball collision scene
-		var collision = collision_scene.instance()
-		# set the effect's position
-		collision.set_pos(determine_effect_position())
-		# get the root
-		var root = get_node("/root")
-		# get the main scene (last child of the root)
-		var main_scene = root.get_child(root.get_child_count() - 1)
-		# add the node to the main scene
-		main_scene.add_child(collision)
+		# display a puff of particles at the collision position
+		create_collision_effect()
 		
 		# check what was hit
 		var body = get_collider()
 		if body.is_in_group("Blocks"): # hit a block
-			# Let the block know it was hit and see if it was destroyed
-			var block_destroyed = body.hit() 
-			if block_destroyed:
-				# update the speed level based on the block's speed level
-				set_speed_level(body.speed_level)
-				# play the block hit sound
-				sound_effects.play("BlockHit")
+			# handle the collision with the block
+			handle_block_collision(body)
 		elif body.get_name() == "Paddle": # hit the paddle
-			var distance = Vector2()
-			# calculate the distance of the ball from center of paddle
-			distance.x = get_pos().x - body.get_global_pos().x
-			# calculate the amount of horizontal influence
-			var influence = distance * PADDLE_INFLUENCE
-			# apply the horizontal influence on the current velocity
-			velocity += influence
-			# reset the ball speed
-			velocity = velocity.normalized() * get_current_speed()
-			# play the paddle hit sound
-			sound_effects.play("PaddleHit")
+			# handle the collision with the paddle
+			handle_paddle_collision(body)
 		else:
-			if body.get_name() == "Top":
-				set_speed_level(MAX_SPEED_LEVEL)
-			# play the wall hit sound
-			sound_effects.play("WallHit")
+			# handle the collision with the wall
+			handle_other_collision(body)
 		
 		# move the remaining motion
 		move(remaining_motion)
@@ -100,11 +93,6 @@ func _input(event):
 		held = false
 		# turn on particle trail
 		trail.set_emitting(true)
-
-
-func _on_visible_exit_screen():
-	# free the ball resources
-	queue_free()
 
 
 func initialize(new_hold_position):
@@ -129,6 +117,15 @@ func initialize(new_hold_position):
 	velocity = initial_velocity.rotated(radian)
 
 
+func create_collision_effect():
+	# create a new node from the ball collision scene
+	var collision = collision_scene.instance()
+	# set the effect's position
+	collision.set_pos(determine_effect_position())
+	# add the node to the parent container
+	get_parent().add_child(collision)
+
+
 func determine_effect_position():
 	# get the sprite node
 	var sprite = get_node("Sprite")
@@ -149,6 +146,38 @@ func determine_effect_position():
 	
 	# return the ball's position plus the offset
 	return get_pos() + (Vector2(offset_x, offset_y) * sprite_diameter)
+
+
+func handle_block_collision(body):
+	# Let the block know it was hit and see if it was destroyed
+	var block_destroyed = body.hit() 
+	if block_destroyed:
+		# update the speed level based on the block's speed level
+		set_speed_level(body.speed_level)
+		# play the block hit sound
+		sound_effects.play("BlockHit")
+
+
+func handle_paddle_collision(body):
+	var distance = Vector2()
+	# calculate the distance of the ball from center of paddle
+	distance.x = get_pos().x - body.get_global_pos().x
+	# calculate the amount of horizontal influence
+	var influence = distance * PADDLE_INFLUENCE
+	# apply the horizontal influence on the current velocity
+	velocity += influence
+	# reset the ball speed
+	velocity = velocity.normalized() * get_current_speed()
+	# play the paddle hit sound
+	sound_effects.play("PaddleHit")
+
+
+func handle_other_collision(body):
+	if body.get_name() == "Top": # top of the wall was hit
+		# set the speed level to the maximum
+		set_speed_level(MAX_SPEED_LEVEL)
+	# play the wall hit sound
+	sound_effects.play("WallHit")
 
 
 func set_speed_level(new_level):
